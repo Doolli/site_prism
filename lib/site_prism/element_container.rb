@@ -2,6 +2,23 @@ module SitePrism
   module ElementContainer
     attr_reader :mapped_items
 
+
+    def text(element_name, *find_args)
+      build element_name, *find_args do
+        define_method element_name.to_s do |*runtime_args|
+          find_first(*find_args, *runtime_args).text
+        end
+      end
+    end
+
+    def texts(collection_name, *find_args)
+      build collection_name, *find_args do
+        define_method collection_name.to_s do |*runtime_args|
+          find_all(*find_args, *runtime_args).map &:text
+        end
+      end
+    end
+
     def element(element_name, *find_args)
       build element_name, *find_args do
         define_method element_name.to_s do |*runtime_args|
